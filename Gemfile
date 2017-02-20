@@ -43,4 +43,7 @@ end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'responders', '~> 2.0'
+#For asset pipeline
 gem 'angular-rails-templates'
+
+gem 'devise'

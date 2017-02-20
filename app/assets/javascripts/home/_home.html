@@ -1,12 +1,14 @@
 
+<!-- <img src="/assets/profile.png" alt=""> -->
+<a ng-href="/#!/users/login">Login</a>
 
-
-
-
+<!-- <img src="<%= asset_path('profile.png"><img> -->
 <div ng-repeat="post in posts | orderBy:'-upvotes'">
   <a ng-show="post.link" ng-href="/#!/posts/{{post.id}}">
     {{post.id}}
   </a>
+
+
   <span ng-hide="post.link">
     {{post.title}}
   </span>

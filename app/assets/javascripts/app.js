@@ -1,7 +1,8 @@
-angular.module('flapperNews', ['ui.router', 'templates'])
+angular.module('flapperNews', ['ui.router', 'templates', 'Devise'])
 .config([
 '$stateProvider',
 '$urlRouterProvider',
+'AuthProvider',
 function($stateProvider, $urlRouterProvider) {
 
   $stateProvider
@@ -15,8 +16,13 @@ function($stateProvider, $urlRouterProvider) {
         }]
       }
     })
+    .state('users', {
+      url: '/users/login',
+      templateUrl: 'users/_users_login.html',
+      controller: 'UsersCtrl'
+    })
     .state('home', {
-      url: '/home',
+      url: '/',
       templateUrl: 'home/_home.html',
       controller: 'MainCtrl',
       resolve: {
@@ -27,7 +33,7 @@ function($stateProvider, $urlRouterProvider) {
       }
     });
 
-  $urlRouterProvider.otherwise('home')
+  $urlRouterProvider.otherwise('/')
 }])
 
 .factory('posts', [
@@ -80,6 +86,88 @@ function($scope, posts, post){
     $scope.author = '';
 
   };
+
+}])
+
+.controller('UsersCtrl', [
+'$scope',
+'$http',
+'Auth',
+function($scope, $http, Auth){
+  console.log(Auth._currentUser);
+  $scope.login_user = {email: null, password: null};
+
+  $scope.login = function() {
+    var credentials = {
+      email: $scope.login_user.email,
+      password: $scope.login_user.password,
+      // password_confirmation: 'password1'
+    };
+    var config = {
+      headers: {
+        'X-HTTP-Method-Override': 'POST'
+      }
+    };
+
+    Auth.login(credentials, config).then(function(user) {
+        console.log(user); // => {id: 1, ect: '...'}
+        console.log(Auth._currentUser);
+    }, function(error) {
+        // Authentication failed...
+    });
+
+    $scope.$on('devise:login', function(event, currentUser) {
+        // after a login, a hard refresh, a new tab
+    });
+
+  };
+
+  $scope.logout = function() {
+    var config = {
+        headers: {
+            'X-HTTP-Method-Override': 'DELETE'
+        }
+    };
+    // Log in user...
+    // ...
+    Auth.logout(config).then(function(oldUser) {
+        console.log(oldUser);
+        console.log(Auth._currentUser);
+    }, function(error) {
+        // An error occurred logging out.
+    });
+
+    $scope.$on('devise:logout', function(event, oldCurrentUser) {
+        // ...
+    });
+  };
+
+
+
+  $scope.signup = function() {
+
+    var credentials = {
+      email: $scope.signup_user.email,
+      password: $scope.signup_user.password,
+      // password_confirmation: 'password1'
+    };
+    var config = {
+      headers: {
+        'X-HTTP-Method-Override': 'POST'
+      }
+    };
+    Auth.register(credentials, config).then(function(registeredUser) {
+      console.log(registeredUser); // => {id: 1, ect: '...'}
+      console.log(Auth._currentUser);
+    }, function(error) {
+      // Registration failed...
+    });
+    $scope.$on('devise:new-registration', function(event, user) {
+      console.log('devise:new-registration');
+      // ...
+    });
+  }
+
 
 }])
 
