@@ -3,8 +3,11 @@ angular.module('flapperNews', ['ui.router', 'templates', 'Devise'])
 '$stateProvider',
 '$urlRouterProvider',
 'AuthProvider',
-function($stateProvider, $urlRouterProvider) {
-
+function($stateProvider, $urlRouterProvider,AuthProvider) {
+  AuthProvider.registerPath('usermongos.json');
+  AuthProvider.loginPath('usermongos/sign_in.json');
+  AuthProvider.logoutPath('usermongos/sign_out.json');
+  AuthProvider.resourceName('usermongo');
   $stateProvider
     .state('posts', {
       url: '/posts/{id}',

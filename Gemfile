@@ -47,3 +47,5 @@ gem 'responders', '~> 2.0'
 gem 'angular-rails-templates'
 
 gem 'devise'
+
+gem 'mongoid', '~> 6.0.0'
